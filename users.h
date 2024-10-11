@@ -51,15 +51,25 @@ bool validate_format_id_user(string id, user *inicio){
 //Validar correo
 bool validate_format_mail_user(string mail){
     cout << "Validando correo..." << endl;
+    int at_sing, doc = 0;
     if(mail.empty()){
         cout << "El correo no puede estar vacio." << endl;
         return false;
     }
-    else if(count(mail.begin(), mail.end(), '@') > 1 && !mail.empty()){
-        cout << "El correo solo debe contener un '@'." << endl;
-        return false;
+    else{
+    for (int i = 0; i < mail.length(); i++){
+        if (mail[i] == '@'){
+            at_sing++;
+        }
+        if (mail[i] == '.'){
+            doc++;
+        }
     }
-    return true;
+    }
+    if (at_sing == 1 && doc >= 1 && !mail.empty()){
+        return true;
+    }
+    return false;
 }
 
 //Validar edad
