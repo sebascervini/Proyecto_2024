@@ -17,6 +17,12 @@ struct user{
     user *next;
 };
 
+void enter(){
+    cout << "Presione enter para continuar...";
+    cin.ignore();
+    cin.get();
+}
+
 //Validar ID
 bool validate_id_user(string id, user *inicio){
     cout << "Validando ID..." << endl;
@@ -95,6 +101,22 @@ bool validate_format_age_user(string age){
     }
     return true;
 }
+
+//Validar que el pais exista
+bool validate_country(string country){
+    cout << "Validando pais..." << endl;
+    string countries[] = {"Venezuela", "Colombia", "Argentina", "Chile", "Peru", "Ecuador", "Uruguay", "Paraguay", "Bolivia", "Brasil", "Mexico", "Estados Unidos", "Canada", "España", "Portugal", "Francia", "Alemania", "Italia", "Inglaterra", "Holanda", "Belgica", "Suiza", "Suecia", "Noruega", "Finlandia", "Dinamarca", "Rusia", "China", "Japon", "Corea del Sur", "India", "Australia", "Nueva Zelanda", "Sudafrica", "Egipto", "Nigeria", "Kenia", "Ghana", "Marruecos", "Argelia", "Tunez", "Libia", "Sahara Occidental", "Mauritania", "Senegal", "Gambia", "Guinea", "Sierra Leona", "Liberia", "Costa de Marfil", "Burkina Faso", "Ghana", "Togo", "Benin", "Niger", "Chad", "Sudan", "Sudan del Sur", "Etiopia", "Eritrea", "Djibouti", "Somalia", "Uganda", "Ruanda", "Burundi", "Congo", "Congo", "Angola", "Zambia", "Zimbabwe", "Mozambique", "Namibia", "Botswana", "Sudafrica", "Madagascar", "Mauricio", "Seychelles", "Comoras", "Maldivas", "Sri Lanka", "Bangladesh", "Pakistan", "Afganistan", "Iran", "Iraq", "Siria", "Libano"};
+    if(country.empty()){
+        cout << "El pais no puede estar vacio." << endl;
+        return false;
+    }
+    else if(find(begin(countries), end(countries), country) != end(countries)){
+        return true;
+    }
+    return false;
+}
+
+
 
 //Agregar usuarios
 void add_new_user(user *&inicio, user *&fin){
@@ -237,12 +259,10 @@ void read_file_users(user *&begin){
         getline(iss, id, user_delimiter);
         if(!validate_format_id_user(id, begin)){
             cout << "Error archivo usuarios: El ID de usuario '" << id << "' no se ha cargado porque no tiene un formato valido.\n";
-            enter();
             continue;
         }
         else if(!validate_id_user(id, begin)){
             cout << "Error archivo usuarios: El ID de usuario '" << id << "' no se ha cargado porque el ID ya existe.\n";
-            enter();
             continue;
         }
         new_user->id = id;
