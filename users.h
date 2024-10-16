@@ -282,6 +282,10 @@ void read_file_users(user *&begin){
         getline(iss, password, user_delimiter);
         new_user->password = password;
         getline(iss, country, '\n');
+        if(!validate_country(country)){
+            cout << "Error archivo usuarios: El usuario ID '" << id << "' no se ha cargado porque el pais '" << country << "' no existe.\n";
+            continue;
+        }
         new_user->country = country;
         new_user->next = NULL;
         if(begin == NULL){
