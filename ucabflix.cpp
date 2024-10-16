@@ -5,6 +5,7 @@
 #include <sstream>
 #include "users.h"
 #include "series.h"
+#include "movies.h"
 using namespace std;
 
 /*Comandos git
@@ -67,6 +68,11 @@ int main(){
     user *new_user = NULL;
     user *aux_user = NULL;
     user *aux2_user = NULL;
+    movies *begin_movie = NULL;
+    movies *end_movie = NULL;
+    movies *new_movie = NULL;
+    movies *aux_movie = NULL;
+    movies *aux2_movie = NULL;
     series *new_series = NULL;
     series *begin_series = NULL;
     series *end_series = NULL;
@@ -78,22 +84,26 @@ int main(){
     series_episodes *new_episodes = NULL;
     series_episodes *aux_episodes = NULL;
     series_episodes *aux2_episodes = NULL;
-    string id, name, username, password, mail, age, genre, year, season, number_of_chapters, chapter, duration;
     int opcion = 0;
-    read_file_users(begin_user);
+    read_file_users(begin_user, end_user);
+    read_file_movies(begin_movie, end_movie);
     do{
+        cout << "UCABFLIX" << endl;
         cout << "1. Agregar usuario" << endl;
         cout << "2. Mostrar usuarios" << endl;
         cout << "3. Eliminar usuario" << endl;
-        cout << "4. Agregar serie" << endl;
-        cout << "5. Mostrar series" << endl;
-        cout << "6. Eliminar serie" << endl;
-        cout << "7. Agregar temporada" << endl;
-        cout << "8. Mostrar temporadas" << endl;
-        cout << "9. Eliminar temporada" << endl;
-        cout << "10. Agregar episodio" << endl;
-        cout << "11. Mostrar episodios" << endl;
-        cout << "12. Eliminar episodio" << endl;
+        cout << "4. Agregar pelicula" << endl;
+        cout << "5. Mostrar peliculas" << endl;
+        cout << "6. Eliminar pelicula" << endl;
+        cout << "7. Agregar serie" << endl;
+        cout << "8. Mostrar series" << endl;
+        cout << "9. Eliminar serie" << endl;
+        cout << "10. Agregar temporada" << endl;
+        cout << "11. Mostrar temporadas" << endl;
+        cout << "12. Eliminar temporada" << endl;
+        cout << "13. Agregar episodio" << endl;
+        cout << "14. Mostrar episodios" << endl;
+        cout << "15. Eliminar episodio" << endl;
         cout << "0. Salir" << endl;
         cout << "Opcion: ";
         cin >> opcion;
@@ -102,6 +112,8 @@ int main(){
                 cout << "Saliendo..." << endl;
                 save_users(begin_user);
                 show_file_path("usuarios.txt");
+                save_movies(begin_movie);
+                show_file_path("movies.txt");
                 break;
             case 1:
                 add_new_user(begin_user, end_user);
@@ -116,35 +128,45 @@ int main(){
                 enter();
                 break;
             case 4:
-                add_new_serie(begin_series, end_series);
+                add_new_movie(begin_movie, end_movie);
                 break;
             case 5:
-                show_series(begin_series);
+                show_movies(begin_movie);
                 enter();
                 break;
             case 6:
+                show_movies(begin_movie);
+                delete_movie(begin_movie, end_movie);
+                break;
+            case 7:
+                add_new_serie(begin_series, end_series);
+                break;
+            case 8:
+                show_series(begin_series);
+                enter();
+                break;
+            case 9:
                 show_series(begin_series);
                 delete_serie(begin_series, end_series);
                 break;
-            case 7:
+            case 10:
                 new_seasons = NULL;
                 add_new_seasons(begin_series->down, new_seasons, begin_series);
                 break;
-            case 8:
+            case 11:
                 show_seasons(aux_series->down);
                 break;
-            case 9:
+            case 12:
                 show_seasons(aux_series->down);
                 delete_seasons(aux_series->down, aux_seasons->next);
                 break;
-            case 10:
-                add_new_episodes(aux_seasons->down, aux_episodes->next);
-                break;
-            case 11:
-                show_episodes(aux_seasons->down);
-                break;
-            case 12:
-                show_episodes(aux_seasons->down);
+            case 13:
+                add_new_episodes(aux_seasons->down, aux_episodes->next, aux_series, aux_seasons);
+                show_episodes(aux_seasons->down, aux_series, aux_seasons);
+            case 14:
+                show_episodes(new_seasons->down, aux_series, aux_seasons);
+            case 15:
+                show_episodes(aux_seasons->down, aux_series, aux_seasons);
                 delete_episodes(aux_seasons->down, aux_episodes->next);
                 break;
         }

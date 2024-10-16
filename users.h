@@ -125,6 +125,10 @@ void add_new_user(user *&inicio, user *&fin){
     cout << "ID: ";
     cin.ignore();
     getline(cin, nuevo->id);
+    if(nuevo->id == "Cancelar"){
+        cout << "Cancelando. Saliendo al menu principal." << endl;
+        return;
+    }
     while(!validate_id_user(nuevo->id, inicio) || !validate_format_id_user(nuevo->id, inicio)){
         cout << "ID: ";
         getline(cin, nuevo->id);
@@ -135,6 +139,10 @@ void add_new_user(user *&inicio, user *&fin){
     cout << "Edad: ";
     cin.ignore();
     getline(cin, nuevo->age);
+    if(nuevo->age == "Cancelar"){
+        cout << "Cancelando. Saliendo al menu principal." << endl;
+        return;
+    }
     while(!validate_format_age_user(nuevo->age)){
         cout << "Edad: ";
         getline(cin, nuevo->age);
@@ -145,6 +153,10 @@ void add_new_user(user *&inicio, user *&fin){
     cout << "Mail: ";
     cin.ignore();
     getline(cin, nuevo->mail);
+    if(nuevo->mail == "Cancelar"){
+        cout << "Cancelando. Saliendo al menu principal." << endl;
+        return;
+    }
     while(!validate_format_mail_user(nuevo->mail)){
         cout << "Mail: ";
         getline(cin, nuevo->mail);
@@ -153,7 +165,20 @@ void add_new_user(user *&inicio, user *&fin){
     cout << "Password: ";
     cin >> nuevo->password;
     cout << "Pais: ";
-    cin >> nuevo->country;
+    cin.ignore();
+    getline(cin, nuevo->country);
+    if(nuevo->country == "Cancelar"){
+        cout << "Cancelando. Saliendo al menu principal." << endl;
+        return;
+    }
+    while(!validate_country(nuevo->country)){
+        cout << "Pais: ";
+        getline(cin, nuevo->country);
+    }
+    if(nuevo->name == "Cancelar" || nuevo->username == "Cancelar" || nuevo->password == "Cancelar"){
+        cout << "Cancelando. Saliendo al menu principal." << endl;
+        return;
+    }
     nuevo->next = NULL;
     if(inicio == NULL){
         inicio = nuevo;
@@ -243,7 +268,7 @@ void show_file_path(string file_name){
 }
 
 //Leer archivo de usuarios
-void read_file_users(user *&begin){
+void read_file_users(user *&begin, user *&end){
     const char user_delimiter = '|';
     string file_path = "C:/Users/sebas/Documents/usuarios.txt";
     ifstream file_users(file_path);
@@ -290,13 +315,11 @@ void read_file_users(user *&begin){
         new_user->next = NULL;
         if(begin == NULL){
             begin = new_user;
+            end = new_user;
         }
         else{
-            user *aux = begin;
-            while(aux->next != NULL){
-                aux = aux->next;
-            }
-            aux->next = new_user;
+            end->next = new_user;
+            end = new_user;
         }
     }
     file_users.close();

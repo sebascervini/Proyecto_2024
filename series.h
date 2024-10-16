@@ -28,6 +28,30 @@ struct series{
     series_seasons *down;
 };
 
+//Validar que la serie exista
+bool validate_serie(string id, series *begin){
+    series *aux = begin;
+    cout << "Validando serie..." << endl;
+    if(id.empty()){
+        cout << "El ID no puede estar vacio." << endl;
+        return false;
+    }
+    else if(aux != NULL){
+        while(aux != NULL){
+            if(aux->id == id){
+                cout << "La serie existe." << endl;
+                return true;
+            }
+            aux = aux->next;
+        }
+    }
+    else if(aux == NULL){
+        cout << "La serie no existe." << endl;
+        return false;
+    }
+    return false;
+}
+
 void show_series_episodes(series_episodes *inicio){
     series_episodes *aux = inicio;
     while(aux != NULL){
@@ -111,7 +135,7 @@ void add_new_seasons(series_seasons *&begin, series_seasons *&end, series *aux_s
     cout << "ID de la serie: ";
     cin.ignore();
     getline(cin, id_serie);
-    while(aux_series != NULL && aux_series->id != id_serie){
+    while(aux_series != NULL && !validate_serie(id_serie, aux_series)){
         aux_series = aux_series->next;
     }
     if(aux_series == NULL){
@@ -171,36 +195,75 @@ void delete_seasons(series_seasons *&begin, series_seasons *&end){
     }
 }
 
+
 //Agregar episodios
-void add_new_episodes(series_episodes *&begin, series_episodes *&end){
+void add_new_episodes(series_episodes *&begin, series_episodes *&end, series *series_begin, series_seasons *seasons_begin){
     series_episodes *newE = new series_episodes;
+    series *aux_series = series_begin;
+    series_seasons *aux_season = seasons_begin;
+    string id_serie, season;
     cout << "Agregando episodio..." << endl;
+    cout << "ID de la serie: ";
+    cin.ignore();
+    getline(cin, id_serie);
+    while(aux_series != NULL && !validate_serie(id_serie, series_begin)){
+        aux_series = aux_series->next;
+    }
+    if (aux_series == NULL){
+        cout << "No se encontro la serie" << endl;
+        return;
+    }
+    aux_season = aux_series->down;
+    cout << "Temporada: ";
+    cin.ignore();
+    getline(cin, season);
+    while(aux_season != NULL && aux_season->season != season){
+        aux_season = aux_season->next;
+    }
+    if(aux_season == NULL){
+        cout << "No se encontro la temporada" << endl;
+        return;
+    }
     cout << "Capitulo: ";
     cin.ignore();
     getline(cin, newE->chapter);
     cout << "Nombre: ";
-    cin >> newE->name;
+    getline(cin, newE->name);
     cout << "Duracion: ";
     getline(cin, newE->duration);
     newE->next = NULL;
-    if(!begin){
-        begin = newE;
-        end = newE;
+    if(!aux_season->down){
+        aux_season->down = newE;
     }else{
-        end->next = newE;
-        end = newE;
+        series_episodes *aux_episode = aux_season->down;
+        while(aux_episode->next != NULL){
+            aux_episode = aux_episode->next;
+        }
+        aux_episode->next = newE;
     }
 }
 
 //Mostar episodios
-void show_episodes(series_episodes *begin){
+void show_episodes(series_episodes *begin, series *begin_series, series_seasons *begin_seasons){
     series_episodes *aux = begin;
+    series *aux_series = begin_series;
+    series_seasons *aux_seasons = begin_seasons;
+    while(aux_series != NULL && !validate_serie(aux_series->id, begin_series)){
+        aux_series = aux_series->next;
+    }
+    if(aux_series == NULL){
+        cout << "No se encontro la serie" << endl;
+        return;
+    }
     while(aux != NULL){
         cout << "Capitulo: " << aux->chapter << endl;
         cout << "Nombre: " << aux->name << endl;
         cout << "Duracion: " << aux->duration << endl;
         cout << "----------------------" << endl;
         aux = aux->next;
+    }
+    if(aux == NULL){
+        cout << "No hay episodios registrados en esta temporada." << endl;
     }
 }
 
