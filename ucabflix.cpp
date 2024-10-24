@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include "users.h"
-#include "series.h"
+#include "series2.h"
 #include "movies.h"
 using namespace std;
 
@@ -65,28 +65,22 @@ using namespace std;
 int main(){
     user *begin_user = NULL;
     user *end_user = NULL;
-    user *new_user = NULL;
-    user *aux_user = NULL;
-    user *aux2_user = NULL;
     movies *begin_movie = NULL;
     movies *end_movie = NULL;
-    movies *new_movie = NULL;
-    movies *aux_movie = NULL;
-    movies *aux2_movie = NULL;
-    series *new_series = NULL;
     series *begin_series = NULL;
     series *end_series = NULL;
-    series *aux_series = NULL;
-    series *aux2_series = NULL;
     series_seasons *new_seasons = NULL;
     series_seasons *aux_seasons = NULL;
-    series_seasons *aux2_seasons = NULL;
-    series_episodes *new_episodes = NULL;
     series_episodes *aux_episodes = NULL;
-    series_episodes *aux2_episodes = NULL;
+    series *aux_series = NULL;
     int opcion = 0;
     read_file_users(begin_user, end_user);
     read_file_movies(begin_movie, end_movie);
+    read_file_series(begin_series, end_series);
+    read_file_seasons(begin_series);
+    if(begin_series != NULL){
+        aux_series = begin_series;
+    }
     do{
         cout << "UCABFLIX" << endl;
         cout << "1. Agregar usuario" << endl;
@@ -114,6 +108,10 @@ int main(){
                 show_file_path("usuarios.txt");
                 save_movies(begin_movie);
                 show_file_path("movies.txt");
+                save_series(begin_series);
+                show_file_path("series.txt");
+                save_seasons(begin_series);
+                show_file_path("temporadas.txt");
                 break;
             case 1:
                 add_new_user(begin_user, end_user);
@@ -150,24 +148,13 @@ int main(){
                 delete_serie(begin_series, end_series);
                 break;
             case 10:
-                new_seasons = NULL;
-                add_new_seasons(begin_series->down, new_seasons, begin_series);
+                show_series(begin_series);
+                add_new_season(begin_series);
                 break;
             case 11:
-                show_seasons(aux_series->down);
-                break;
-            case 12:
-                show_seasons(aux_series->down);
-                delete_seasons(aux_series->down, aux_seasons->next);
-                break;
-            case 13:
-                add_new_episodes(aux_seasons->down, aux_episodes->next, aux_series, aux_seasons);
-                show_episodes(aux_seasons->down, aux_series, aux_seasons);
-            case 14:
-                show_episodes(new_seasons->down, aux_series, aux_seasons);
-            case 15:
-                show_episodes(aux_seasons->down, aux_series, aux_seasons);
-                delete_episodes(aux_seasons->down, aux_episodes->next);
+                show_series(begin_series);
+                show_seasons(begin_series);
+                enter();
                 break;
         }
     }while(opcion != 0);
